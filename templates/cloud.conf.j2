@@ -1,0 +1,17 @@
+[Global]
+username = {{ os_username }}
+password = {{ os_password }}
+user-domain-name = {{ os_user_domain_name }} 
+auth-url = {{ os_auth_url }}
+project-id = {{ os_project }}
+region = RegionOne
+
+[LoadBalancer]
+use-octavia=true
+subnet-id={{ os_subnet_id }}
+floating-network-id={{ os_floating_network_id }}
+max-shared-lb={{ os_max_shared_lb }}
+lb-provider=octavia
+
+[BlockStorage]
+bs-version=v2

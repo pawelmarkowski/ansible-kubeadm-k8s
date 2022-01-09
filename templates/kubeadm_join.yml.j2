@@ -1,0 +1,21 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+caCertPath: /etc/kubernetes/pki/ca.crt
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "{{ control_plane_endpoint }}:6443"
+    token: "{{ hostvars[groups['module_k8s_master_nodes_0'][0]]['token']['stdout'] }}"
+    caCertHashes:
+      - sha256:{{ hostvars[groups['module_k8s_master_nodes_0'][0]]['discovery_token_ca_cert_hash']['stdout'] }}
+  timeout: 4m0s
+kind: JoinConfiguration
+localAPIEndpoint:
+  advertiseAddress: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+  bindPort: 6443
+{% if ("module_k8s_master_nodes_0" not in group_names)
+    and  ("module_k8s_worker_nodes" not in group_names) %}
+controlPlane:
+  certificateKey: "{{ hostvars[groups['module_k8s_master_nodes_0'][0]]['certificate_key']['stdout'] }}"
+nodeRegistration:
+  kubeletExtraArgs:
+    cloud-provider: "external"
+{% endif %}

@@ -1,0 +1,80 @@
+- name: Install packages required by kubetools
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+    state: latest
+    update_cache: yes
+  become: yes
+
+- name: Add an Apt signing key for kubernetes
+  ansible.builtin.apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+    state: present
+  retries: 2
+  delay: 3
+  register: k8s_key_result
+  until: k8s_key_result["failed"] == false
+  become: yes
+
+- name: Debug k8s_key_result
+  debug:
+    var: k8s_key_result
+    verbosity: 1
+
+- name: Add kubernetes to apt repository
+  apt_repository:
+    # unfortunately there is no repo for focal [kubernetes-focal] dist (ubuntu 20.04)
+    # repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-{{ ansible_facts['lsb']['codename'] }} main
+    repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+  become: yes
+
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Configure kubelet
+  copy:
+    src: default/kubelet
+    dest: /etc/default/kubelet
+    mode: "0644"
+  become: yes
+
+- name: Install kubetools
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+      - bash-completion
+    state: latest
+    update_cache: yes
+  become: yes
+
+- name: Prevent kubetools from being upgraded
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
+  become: yes
+
+- name: enable kubectl autocompletion
+  shell: kubectl completion bash > /etc/bash_completion.d/kubectl
+  become: yes
+
+- name: enable kubeadm autocompletion
+  shell: kubeadm completion bash > /etc/bash_completion.d/kubeadm
+  become: yes
+
+- name: create custom conf dir
+  ansible.builtin.file:
+    path: /etc/kubernetes/custom_configs
+    state: directory
+  become: yes

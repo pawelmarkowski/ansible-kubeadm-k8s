@@ -1,0 +1,37 @@
+---
+- name: Check if br_netfilter is loaded
+  shell: lsmod | grep br_netfilter
+  register: br_netfilter_enabled
+  ignore_errors: yes
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: br_netfilter_enabled.stdout_lines == []
+    verbosity: 1
+
+- name: Add the br_netfilter module
+  modprobe:
+    name: br_netfilter
+    state: present
+  when: br_netfilter_enabled.stdout_lines == []
+  become: yes
+
+- name: Check if br_netfilter is loaded
+  shell: lsmod | grep br_netfilter
+  when: br_netfilter_enabled.stdout_lines == []
+
+- name: Autostart module br_netfilter
+  copy:
+    src: modules-load.d/k8s.conf
+    dest: /etc/modules-load.d/k8s.conf
+    mode: "0640"
+  when: br_netfilter_enabled.stdout_lines == []
+  become: yes
+
+- name: Ensure net.bridge.bridge-nf-call-iptables is set to 1
+  copy:
+    src: sysctl.d/k8s.conf
+    dest: /etc/sysctl.d/k8s.conf
+    mode: "0640"
+  when: br_netfilter_enabled.stdout_lines == []
+  become: yes

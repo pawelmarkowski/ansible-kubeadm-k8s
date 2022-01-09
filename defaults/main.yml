@@ -1,0 +1,16 @@
+---
+dns_domain: k01
+control_plane_endpoint: xxxx.xxx.com
+pod_network_cidr: 10.42.0.0/16
+service_cidr: 10.43.0.0/17
+cluster_pool_ipv4_cidr: 10.42.0.0/16
+cluster_pool_ipv4_mask_size: 26
+# not tested option
+os_max_shared_lb: 5
+os_floating_network_id: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
+os_subnet_id: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
+os_username: xxxx
+os_password: "xxxxxx"
+os_user_domain_name: xxxxx
+os_auth_url: https://cf2.cloudferro.com:5000/v3
+os_project: xxxxxxxxx

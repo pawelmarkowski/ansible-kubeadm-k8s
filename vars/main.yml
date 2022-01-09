@@ -1,0 +1,15 @@
+---
+dns_domain: kubernetes01
+control_plane_endpoint: 185.178.86.93
+pod_network_cidr: 10.42.0.0/16
+service_cidr: 10.43.0.0/17
+# not tested option
+os_max_shared_lb: 5
+os_floating_network_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
+# worker_nodes_sub
+os_subnet_id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx
+os_username: xxxx
+os_password: "xxxxxxx"
+os_user_domain_name: xxxx
+os_auth_url: https://cf2.cloudferro.com:5000/v3
+os_project: xxxxxxx

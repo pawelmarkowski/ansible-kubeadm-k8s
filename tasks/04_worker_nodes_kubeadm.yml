@@ -1,0 +1,10 @@
+- name: copy kubeadm join config
+  template:
+    src: kubeadm_join.yml.j2
+    dest: /etc/kubernetes/custom_configs/kubeadm_join.conf
+  become: yes
+
+- name: join worker nodes
+  shell: >
+    kubeadm join --config /etc/kubernetes/custom_configs/kubeadm_join.conf
+  become: yes

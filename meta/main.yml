@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  role_name: kubeadm-k8s
+  author: Paweł Markowski
+  description: Kubernetes installation
+  company: Mtechnology.pl
+  issue_tracker_url: "https://github.com/pawelmarkowski/ansible-kubeadm-k8s/issues"
+
+  license: Proprietary
+  min_ansible_version: 2.7
+
+  platforms:
+    - name: Any
+      versions:
+        - Any
+
+dependencies: []
