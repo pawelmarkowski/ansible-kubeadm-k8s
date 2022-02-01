@@ -1,16 +1,16 @@
 [Global]
-username = {{ os_username }}
-password = {{ os_password }}
-user-domain-name = {{ os_user_domain_name }} 
-auth-url = {{ os_auth_url }}
-project-id = {{ os_project }}
+username = {{ cf_kubeadm_os_username }}
+password = {{ cf_kubeadm_os_password }}
+user-domain-name = {{ cf_kubeadm_os_user_domain_name }} 
+auth-url = {{ cf_kubeadm_os_auth_url }}
+project-id = {{ cf_kubeadm_os_project }}
 region = RegionOne
 
 [LoadBalancer]
 use-octavia=true
-subnet-id={{ os_subnet_id }}
-floating-network-id={{ os_floating_network_id }}
-max-shared-lb={{ os_max_shared_lb }}
+subnet-id={{ cf_kubeadm_os_subnet_id }}
+floating-network-id={{ cf_kubeadm_os_floating_network_id }}
+max-shared-lb={{ cf_kubeadm_os_max_shared_lb }}
 lb-provider=octavia
 
 [BlockStorage]

@@ -1,0 +1,21 @@
+---
+stages:
+  - lint
+
+yamllint:
+  stage: lint
+  tags:
+    - kubernetes
+  image:
+    name: registry.cloudferro.com/ansible-devs/ci-image:v0.2.1
+  script:
+    - "yamllint -c /yamllint.yaml ${CI_PROJECT_DIR}"
+
+ansible-linter:
+  stage: lint
+  tags:
+    - kubernetes
+  image:
+    name: registry.cloudferro.com/ansible-devs/ci-image:v0.2.1
+  script:
+    - "ansible-lint -c /ansible-lint  ${CI_PROJECT_DIR}"

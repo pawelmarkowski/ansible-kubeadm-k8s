@@ -1,0 +1,64 @@
+---
+- name: Check if kubelet.conf exists
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: _kubeadm_kubelet_conf
+  become: true
+
+- name: Check if node already is added to cluster
+  command: kubectl cluster-info
+  register: _kubeadm_provisioned
+  failed_when: false
+  changed_when: false
+  become: true
+
+- block:
+    - name: Generate random certificate key
+      command: kubeadm certs certificate-key
+      register: certificate_key
+      become: true
+
+    - name: Copy kubeadm init config
+      template:
+        src: kubeadm_init.yml.j2
+        dest: /etc/kubernetes/custom_configs/kubeadm_init.conf
+        owner: root
+        group: root
+        mode: "0644"
+      become: true
+      register: _kubeadm_init_config
+
+    - name: Execute kubeadm init
+      command: >
+        kubeadm init --config /etc/kubernetes/custom_configs/kubeadm_init.conf
+        --upload-certs
+      async: 900
+      poll: 30
+      become: true
+      when: _kubeadm_init_config.changed
+
+    - name: Upload secret cloud.conf
+      template:
+        src: cloud.conf.j2
+        dest: /tmp/cloud.conf
+        owner: root
+        group: root
+        mode: "0644"
+      become: true
+
+    - name: Load cloud.conf as secret
+      command: kubectl --kubeconfig=/etc/kubernetes/admin.conf create secret -n kube-system generic cloud-config --from-file=/tmp/cloud.conf
+      become: true
+
+    - name: Create RBAC resources and openstack-cloud-controller-manager deamonset
+      command: "kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/kubernetes/cloud-provider-openstack/master/manifests/controller-manager/{{ item }}"
+      with_items:
+        - cloud-controller-manager-roles.yaml
+        - cloud-controller-manager-role-bindings.yaml
+        - openstack-cloud-controller-manager-ds.yaml
+      become: true
+  # end block
+  when: |
+    (not _kubeadm_kubelet_conf.stat.exists | bool and
+    _kubeadm_provisioned.rc != 0) or
+    cf_kubeadm_join_override | bool
