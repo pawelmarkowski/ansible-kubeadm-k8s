@@ -1,21 +1,31 @@
+---
 apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
 caCertPath: /etc/kubernetes/pki/ca.crt
 discovery:
   bootstrapToken:
-    apiServerEndpoint: "{{ control_plane_endpoint }}:6443"
-    token: "{{ hostvars[groups['module_k8s_master_nodes_0'][0]]['token']['stdout'] }}"
+    apiServerEndpoint: "{{ cf_kubeadm_control_plane_endpoint }}:6443"
+    token: "{{ hostvars[groups['kubeadm_masters'][0]]['token']['stdout'] }}"
     caCertHashes:
-      - sha256:{{ hostvars[groups['module_k8s_master_nodes_0'][0]]['discovery_token_ca_cert_hash']['stdout'] }}
+      - sha256:{{ hostvars[groups['kubeadm_masters'][0]]['discovery_token_ca_cert_hash']['stdout'] }}
   timeout: 4m0s
-kind: JoinConfiguration
-localAPIEndpoint:
-  advertiseAddress: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
-  bindPort: 6443
-{% if ("module_k8s_master_nodes_0" not in group_names)
-    and  ("module_k8s_worker_nodes" not in group_names) %}
-controlPlane:
-  certificateKey: "{{ hostvars[groups['module_k8s_master_nodes_0'][0]]['certificate_key']['stdout'] }}"
 nodeRegistration:
+{% if cf_kubeadm_cri_type == "containerd" %}
+  criSocket: /run/containerd/containerd.sock
+{% elif cf_kubeadm_cri_type == "docker" %}
+  criSocket: /var/run/dockershim.sock
+{% endif %}
   kubeletExtraArgs:
     cloud-provider: "external"
+{% if "kubeadm_masters" in group_names %}
+controlPlane:
+  certificateKey: "{{ hostvars[groups['kubeadm_masters'][0]]['certificate_key']['stdout'] }}"
+  localAPIEndpoint: 
+    advertiseAddress: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    bindPort: 6443
 {% endif %}
+
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: "{{ cf_kubeadm_cri_cgroup_driver }}"

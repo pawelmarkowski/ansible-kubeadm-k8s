@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+
+Package: kubelet
+Pin: version {{ cf_kubeadm_version['kubelet'] }}
+Pin-Priority: 999
+
+Package: kubeadm
+Pin: version {{ cf_kubeadm_version['kubeadm'] }}
+Pin-Priority: 999
+
+Package: kubectl
+Pin: version {{ cf_kubeadm_version['kubectl'] }}
+Pin-Priority: 999
