@@ -1,9 +1,9 @@
 ---
 galaxy_info:
-  role_name: kubeadm-k8s
-  author: Paweł Markowski
+  role_name: cf.kubeadm
+  author: Paweł Markowski, Jan Sobczak
   description: Kubernetes installation
-  company: Mtechnology.pl
+  company: Mtechnology.pl, Cloudferro
   issue_tracker_url: "https://github.com/pawelmarkowski/ansible-kubeadm-k8s/issues"
 
   license: Proprietary

@@ -1,18 +1,19 @@
+---
 - name: Creates .kube directory
   file:
     path: "{{ ansible_env.HOME }}/.kube"
     state: directory
+    owner: root
+    group: root
+    mode: "0700"
+  become: true
 
 - name: Copy file with owner and permissions
-  ansible.builtin.copy:
-    remote_src: yes
+  copy:
+    remote_src: true
     src: /etc/kubernetes/admin.conf
-    dest: "{{ ansible_env.HOME }}/.kube/config"
-    owner: "{{ ansible_env.USER }}"
-    group: "{{ ansible_env.USER }}"
+    dest: ~/.kube/config
+    owner: root
+    group: root
     mode: "0600"
-  become: yes
-
-- name: delete auth token
-  shell: kubeadm token delete {{ hostvars[groups['module_k8s_master_nodes_0'][0]]['token']['stdout'] }}
-  run_once: True
+  become: true

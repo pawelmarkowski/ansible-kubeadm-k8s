@@ -3,6 +3,11 @@ apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 certificateKey: {{ certificate_key.stdout }}
 nodeRegistration:
+{% if cf_kubeadm_cri_type == "containerd" %}
+  criSocket: /run/containerd/containerd.sock
+{% elif cf_kubeadm_cri_type == "docker" %}
+  criSocket: /var/run/dockershim.sock
+{% endif %}
   kubeletExtraArgs:
     cloud-provider: "external"
 skipPhases:
@@ -13,16 +18,20 @@ localAPIEndpoint:
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
-kubernetesVersion: v1.23.0
-controlPlaneEndpoint: "{{ control_plane_endpoint }}:6443"
-clusterName: {{ dns_domain }}
+kubernetesVersion: "{{ cf_kubeadm_kubernetes_version }}"
+controlPlaneEndpoint: "{{ cf_kubeadm_control_plane_endpoint }}:6443"
+clusterName: {{ cf_kubeadm_cluster_name }}
 networking:
-  dnsDomain: "{{ dns_domain }}.local"
-  podSubnet: "{{ pod_network_cidr }}"
-  serviceSubnet: "{{ service_cidr }}"
+  dnsDomain: "{{ cf_kubeadm_dns_domain }}.local"
+  podSubnet: "{{ cf_kubeadm_pod_network_cidr }}"
+  serviceSubnet: "{{ cf_kubeadm_service_cidr }}"
 apiServer:
   extraArgs:
     cloud-provider: "external"
 controllerManager:
   extraArgs:
     cloud-provider: "external"
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: "{{ cf_kubeadm_cri_cgroup_driver }}"
