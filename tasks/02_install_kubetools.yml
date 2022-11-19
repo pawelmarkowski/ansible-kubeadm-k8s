@@ -35,6 +35,15 @@
     mode: "0644"
   become: true
 
+- name: Allow kubetools being upgraded
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: install
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
+
 - name: Install kubetools
   apt:
     name:
