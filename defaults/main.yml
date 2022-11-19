@@ -26,6 +26,6 @@ kubeadm_cri_type: docker
 kubeadm_cri_cgroup_driver: cgroupfs
 
 # Provision klaster with cilium
-kubeadm_install_cilium: false
+kubeadm_install_cilium: true
 
 kubeadm_join_override: false
