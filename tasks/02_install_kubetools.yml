@@ -43,6 +43,9 @@
     - kubelet
     - kubeadm
     - kubectl
+  become: true
+  when: |
+    kubeadm_version['reinstall'] | bool
 
 - name: Install kubetools
   apt:
@@ -64,8 +67,6 @@
     - kubeadm
     - kubectl
   become: true
-  when: |
-    kubeadm_version['reinstall'] | bool
 
 - name: Configure kubelet
   copy:
