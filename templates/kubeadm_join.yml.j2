@@ -4,15 +4,15 @@ kind: JoinConfiguration
 caCertPath: /etc/kubernetes/pki/ca.crt
 discovery:
   bootstrapToken:
-    apiServerEndpoint: "{{ cf_kubeadm_control_plane_endpoint }}:6443"
+    apiServerEndpoint: "{{ kubeadm_control_plane_endpoint }}:6443"
     token: "{{ hostvars[groups['kubeadm_masters'][0]]['token']['stdout'] }}"
     caCertHashes:
       - sha256:{{ hostvars[groups['kubeadm_masters'][0]]['discovery_token_ca_cert_hash']['stdout'] }}
   timeout: 4m0s
 nodeRegistration:
-{% if cf_kubeadm_cri_type == "containerd" %}
+{% if kubeadm_cri_type == "containerd" %}
   criSocket: /run/containerd/containerd.sock
-{% elif cf_kubeadm_cri_type == "docker" %}
+{% elif kubeadm_cri_type == "docker" %}
   criSocket: /var/run/dockershim.sock
 {% endif %}
   kubeletExtraArgs:
@@ -28,4 +28,4 @@ controlPlane:
 ---
 kind: KubeletConfiguration
 apiVersion: kubelet.config.k8s.io/v1beta1
-cgroupDriver: "{{ cf_kubeadm_cri_cgroup_driver }}"
+cgroupDriver: "{{ kubeadm_cri_cgroup_driver }}"

@@ -6,14 +6,14 @@
     remote_src: true
   become: true
 
-- name: Enable cilium autocompletion  # noqa no-changed-when
+- name: Enable cilium autocompletion # noqa no-changed-when
   command: cilium completion bash > /etc/bash_completion.d/cilium
   become: true
 
-- name: Install cilium  # noqa no-changed-when
+- name: Install cilium # noqa no-changed-when
   shell: >
-    cilium install --config k8s-api-server=https://{{ cf_kubeadm_control_plane_endpoint }}:6443
-    --config kube-proxy-replacement=strict --config cluster-pool-ipv4-mask-size={{ cf_kubeadm_cluster_pool_ipv4_mask_size }}
-    --config cluster-pool-ipv4-cidr={{ cf_kubeadm_cluster_pool_ipv4_cidr }}  --wait-duration 100s
+    cilium install --config k8s-api-server=https://{{ kubeadm_control_plane_endpoint }}:6443
+    --config kube-proxy-replacement=strict --config cluster-pool-ipv4-mask-size={{ kubeadm_cluster_pool_ipv4_mask_size }}
+    --config cluster-pool-ipv4-cidr={{ kubeadm_cluster_pool_ipv4_cidr }}  --wait-duration 100s
   run_once: true
   become: true

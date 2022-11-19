@@ -1,30 +1,30 @@
 ---
-cf_kubeadm_version:
-  kubeadm: 1.23.*
-  kubelet: 1.23.*
-  kubectl: 1.23.*
+kubeadm_kubernetes_version:
+  kubeadm: 1.25.*
+  kubelet: 1.25.*
+  kubectl: 1.25.*
 
-cf_kubeadm_dns_domain: cluster
-cf_kubeadm_cluster_name: cluster
-cf_kubeadm_control_plane_endpoint: ''
-cf_kubeadm_pod_network_cidr: 10.42.0.0/16
-cf_kubeadm_service_cidr: 10.43.0.0/17
-cf_kubeadm_cluster_pool_ipv4_cidr: 10.42.0.0/16
-cf_kubeadm_cluster_pool_ipv4_mask_size: 26
+kubeadm_dns_domain: cluster
+kubeadm_cluster_name: cluster
+kubeadm_control_plane_endpoint: ""
+kubeadm_pod_network_cidr: 10.42.0.0/16
+kubeadm_service_cidr: 10.43.0.0/17
+kubeadm_cluster_pool_ipv4_cidr: 10.42.0.0/16
+kubeadm_cluster_pool_ipv4_mask_size: 26
 
-cf_kubeadm_os_max_shared_lb: 5
-cf_kubeadm_os_floating_network_id: ''
-cf_kubeadm_os_subnet_id: ''
-cf_kubeadm_os_username: ''
-cf_kubeadm_os_password: ''
-cf_kubeadm_os_user_domain_name: ''
-cf_kubeadm_os_auth_url: "https://cf2.cloudferro.com:5000/v3"
-cf_kubeadm_os_project: ''
+kubeadm_os_max_shared_lb: 5
+kubeadm_os_floating_network_id: ""
+kubeadm_os_subnet_id: ""
+kubeadm_os_username: ""
+kubeadm_os_password: ""
+kubeadm_os_user_domain_name: ""
+kubeadm_os_auth_url: "https://cf2.cloudferro.com:5000/v3"
+kubeadm_os_project: ""
 
-cf_kubeadm_cri_type: docker
-cf_kubeadm_cri_cgroup_driver: cgroupfs
+kubeadm_cri_type: docker
+kubeadm_cri_cgroup_driver: cgroupfs
 
 # Provision klaster with cilium
-cf_kubeadm_install_cilium: false
+kubeadm_install_cilium: false
 
-cf_kubeadm_join_override: false
+kubeadm_join_override: false

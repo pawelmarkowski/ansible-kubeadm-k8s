@@ -56,5 +56,5 @@
 
 - import_tasks: 06_cilium.yml
   when: >
-    cf_kubeadm_install_cilium | bool and
+    kubeadm_install_cilium | bool and
     inventory_hostname in groups['module_k8s_master_nodes']

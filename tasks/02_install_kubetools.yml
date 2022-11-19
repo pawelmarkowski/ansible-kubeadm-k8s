@@ -38,9 +38,9 @@
 - name: Install kubetools
   apt:
     name:
-      - "kubelet={{ cf_kubeadm_version['kubelet'] }}"
-      - "kubeadm={{ cf_kubeadm_version['kubeadm'] }}"
-      - "kubectl={{ cf_kubeadm_version['kubectl'] }}"
+      - "kubelet={{ kubeadm_version['kubelet'] }}"
+      - "kubeadm={{ kubeadm_version['kubeadm'] }}"
+      - "kubectl={{ kubeadm_version['kubectl'] }}"
       - cri-tools
     state: present
     update_cache: true
@@ -65,7 +65,7 @@
     group: root
   become: true
 
-- name: "Configure cri-tools with selected CRI: {{ cf_kubeadm_cri_type }}"
+- name: "Configure cri-tools with selected CRI: {{ kubeadm_cri_type }}"
   template:
     src: crictl.yaml.j2
     dest: /etc/crictl.yaml

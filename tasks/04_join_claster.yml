@@ -31,4 +31,4 @@
   when: |
     (not _kubeadm_kubelet_conf.stat.exists | bool and
     _kubeadm_provisioned.rc != 0) or
-    cf_kubeadm_join_override | bool
+    kubeadm_join_override | bool

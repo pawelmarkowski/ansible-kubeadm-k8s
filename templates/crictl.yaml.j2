@@ -1,8 +1,8 @@
 #{{ ansible_managed }}
-{% if cf_kubeadm_cri_type == "containerd" %}
+{% if kubeadm_cri_type == "containerd" %}
 runtime-endpoint: "unix:///run/containerd/containerd.sock"
 image-endpoint: "unix:///run/containerd/containerd.sock"
-{% elif cf_kubeadm_cri_type == "docker" %}
+{% elif kubeadm_cri_type == "docker" %}
 runtime-endpoint: "unix:///var/run/dockershim.sock"
 image-endpoint: "unix:///var/run/dockershim.sock"
 {% endif %}
