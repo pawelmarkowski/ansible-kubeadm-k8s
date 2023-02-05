@@ -45,14 +45,14 @@
     - kubectl
   become: true
   when: |
-    kubeadm_version['reinstall'] | bool
+    kubeadm_version_reinstall | bool
 
 - name: Install kubetools
   apt:
     name:
-      - "kubelet={{ kubeadm_version['kubelet'] }}"
-      - "kubeadm={{ kubeadm_version['kubeadm'] }}"
-      - "kubectl={{ kubeadm_version['kubectl'] }}"
+      - "kubelet={{ kubeadm_version_kubelet }}"
+      - "kubeadm={{ kubeadm_version_kubeadm }}"
+      - "kubectl={{ kubeadm_version_kubectl }}"
       - cri-tools
     state: present
     update_cache: true

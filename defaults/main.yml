@@ -1,10 +1,9 @@
 ---
-kubeadm_version:
-  kubeadm: 1.25.*
-  kubelet: 1.25.*
-  kubectl: 1.25.*
-  kubernetes: 1.25.*
-  reinstall: false
+kubeadm_version_kubeadm: 1.25.*
+kubeadm_version_kubelet: 1.25.*
+kubeadm_version_kubectl: 1.25.*
+kubeadm_version_kubernetes: 1.25.*
+kubeadm_version_reinstall: false
 
 kubeadm_dns_domain: cluster
 kubeadm_cluster_name: cluster
