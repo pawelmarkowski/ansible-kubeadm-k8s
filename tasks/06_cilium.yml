@@ -14,6 +14,6 @@
   shell: >
     cilium install --config k8s-api-server=https://{{ kubeadm_control_plane_endpoint }}:6443
     --config kube-proxy-replacement=strict --config cluster-pool-ipv4-mask-size={{ kubeadm_cluster_pool_ipv4_mask_size }}
-    --config cluster-pool-ipv4-cidr={{ kubeadm_cluster_pool_ipv4_cidr }}  --wait-duration 100s
+    --config cluster-pool-ipv4-cidr={{ kubeadm_cluster_pool_ipv4_cidr }}  --wait-duration 100s --cluster-name {{ kubeadm_cluster_name }}
   run_once: true
   become: true

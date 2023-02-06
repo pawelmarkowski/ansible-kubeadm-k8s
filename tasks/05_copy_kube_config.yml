@@ -12,7 +12,7 @@
     remote_src: true
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/config
-    owner: root
-    group: root
+    # owner: root
+    # group: root
     mode: "0600"
   become: true
