@@ -6,7 +6,6 @@
       - ca-certificates
       - curl
       - bash-completion
-      - gpg-agent
     state: present
     update_cache: true
   become: true
@@ -68,9 +67,9 @@
     - kubectl
   become: true
 
-- name: Configure kubelet
-  copy:
-    src: default/kubelet
+- name: Template kubelet default
+  template:
+    src: kubelet.j2
     dest: /etc/default/kubelet
     mode: "0644"
     owner: root

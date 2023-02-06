@@ -1,13 +1,12 @@
 ---
 - name: Creates .kube directory
   file:
-    path: "{{ ansible_env.HOME }}/.kube"
+    path: ~/.kube
     state: directory
     owner: root
     group: root
     mode: "0700"
   become: true
-
 - name: Copy file with owner and permissions
   copy:
     remote_src: true

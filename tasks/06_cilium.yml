@@ -7,7 +7,7 @@
   become: true
 
 - name: Enable cilium autocompletion # noqa no-changed-when
-  command: cilium completion bash > /etc/bash_completion.d/cilium
+  shell: cilium completion bash > /etc/bash_completion.d/cilium
   become: true
 
 - name: Install cilium # noqa no-changed-when

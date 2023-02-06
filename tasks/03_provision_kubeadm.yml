@@ -35,28 +35,41 @@
       async: 900
       poll: 30
       become: true
-      when: _kubeadm_init_config.changed
+      when: _kubeadm_init_config.changed and kubeadm_preflight_ignore == ""
 
-    - name: Upload secret cloud.conf
-      template:
-        src: cloud.conf.j2
-        dest: /tmp/cloud.conf
-        owner: root
-        group: root
-        mode: "0644"
+    - name: Execute kubeadm init with ignore preflight errors
+      command: >
+        kubeadm init --config /etc/kubernetes/custom_configs/kubeadm_init.conf
+        --upload-certs --ignore-preflight-errors {{ kubeadm_preflight_ignore }}
+      async: 900
+      poll: 30
       become: true
+      when: _kubeadm_init_config.changed and kubeadm_preflight_ignore != ""
 
-    - name: Load cloud.conf as secret
-      command: kubectl --kubeconfig=/etc/kubernetes/admin.conf create secret -n kube-system generic cloud-config --from-file=/tmp/cloud.conf
-      become: true
+    - block:
+        - name: Upload secret cloud.conf
+          template:
+            src: cloud.conf.j2
+            dest: /tmp/cloud.conf
+            owner: root
+            group: root
+            mode: "0644"
+          become: true
 
-    - name: Create RBAC resources and openstack-cloud-controller-manager deamonset
-      command: "kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/kubernetes/cloud-provider-openstack/master/manifests/controller-manager/{{ item }}"
-      with_items:
-        - cloud-controller-manager-roles.yaml
-        - cloud-controller-manager-role-bindings.yaml
-        - openstack-cloud-controller-manager-ds.yaml
-      become: true
+        - name: Load cloud.conf as secret
+          command: kubectl --kubeconfig=/etc/kubernetes/admin.conf create secret -n kube-system generic cloud-config --from-file=/tmp/cloud.conf
+          become: true
+
+        - name: Create RBAC resources and openstack-cloud-controller-manager deamonset
+          command: "kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/kubernetes/cloud-provider-openstack/master/manifests/controller-manager/{{ item }}"
+          with_items:
+            - cloud-controller-manager-roles.yaml
+            - cloud-controller-manager-role-bindings.yaml
+            - openstack-cloud-controller-manager-ds.yaml
+          become: true
+      # end block
+      when: kubeadm_openstack_cloud_controller_manager | bool
+
   # end block
   when: |
     (not _kubeadm_kubelet_conf.stat.exists | bool and

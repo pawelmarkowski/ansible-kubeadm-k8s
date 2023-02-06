@@ -27,6 +27,14 @@
       command: >
         kubeadm join --config /etc/kubernetes/custom_configs/kubeadm_join.conf
       become: true
+      when: kubeadm_preflight_ignore == ""
+
+    - name: Join node to cluster with ignore preflight errors
+      command: >
+        kubeadm join --config /etc/kubernetes/custom_configs/kubeadm_join.conf --ignore-preflight-errors "{{ kubeadm_preflight_ignore }}"
+      become: true
+      when: kubeadm_preflight_ignore != ""
+
   # end block
   when: |
     (not _kubeadm_kubelet_conf.stat.exists | bool and

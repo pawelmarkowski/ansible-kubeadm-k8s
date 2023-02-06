@@ -13,6 +13,8 @@ kubeadm_service_cidr: 10.43.0.0/17
 kubeadm_cluster_pool_ipv4_cidr: 10.42.0.0/16
 kubeadm_cluster_pool_ipv4_mask_size: 26
 
+## "kubeadm_openstack_cloud_controller_manager": when true, ccm will be installed. It's required on kubernetes, on cloud (openstack). In kubernetes installed on intra VM's/BM's, in environment outside the openstack, CCM is unnecessary.
+kubeadm_openstack_cloud_controller_manager: true
 kubeadm_os_max_shared_lb: 5
 kubeadm_os_floating_network_id: ""
 kubeadm_os_subnet_id: ""
@@ -26,6 +28,14 @@ kubeadm_cri_type: docker
 kubeadm_cri_cgroup_driver: cgroupfs
 
 # Provision klaster with cilium
-kubeadm_install_cilium: true
-
+kubeadm_install_cilium: false
 kubeadm_join_override: false
+
+# https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/ --bind-address
+kubeadm_api_server_bind_address: 0.0.0.0
+
+# Provision cluster with preflight ignore
+kubeadm_preflight_ignore: ""
+
+# Allow too change registration node_ip in cluster
+kubeadm_worker_kubelet_node_ip: ""
