@@ -27,10 +27,15 @@ networking:
   serviceSubnet: "{{ kubeadm_service_cidr }}"
 apiServer:
   extraArgs:
+{% if kubeadm_openstack_cloud_controller_manager %}
     cloud-provider: "external"
+{% endif %}
+    bind-address: "{{ kubeadm_api_server_bind_address }}"
 controllerManager:
+{% if kubeadm_openstack_cloud_controller_manager %}
   extraArgs:
     cloud-provider: "external"
+{% endif %}
 ---
 kind: KubeletConfiguration
 apiVersion: kubelet.config.k8s.io/v1beta1
