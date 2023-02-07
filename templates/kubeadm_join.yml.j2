@@ -5,9 +5,9 @@ caCertPath: /etc/kubernetes/pki/ca.crt
 discovery:
   bootstrapToken:
     apiServerEndpoint: "{{ kubeadm_control_plane_endpoint }}:6443"
-    token: "{{ hostvars[groups['kubeadm_masters'][0]]['token']['stdout'] }}"
+    token: "{{ hostvars[groups['module_k8s_master_nodes'][0]]['token']['stdout'] }}"
     caCertHashes:
-      - sha256:{{ hostvars[groups['kubeadm_masters'][0]]['discovery_token_ca_cert_hash']['stdout'] }}
+      - sha256:{{ hostvars[groups['module_k8s_master_nodes'][0]]['discovery_token_ca_cert_hash']['stdout'] }}
   timeout: 4m0s
 nodeRegistration:
 {% if kubeadm_cri_type == "containerd" %}
@@ -17,9 +17,9 @@ nodeRegistration:
 {% endif %}
   kubeletExtraArgs:
     cloud-provider: "external"
-{% if "kubeadm_masters" in group_names %}
+{% if "module_k8s_master_nodes" in group_names %}
 controlPlane:
-  certificateKey: "{{ hostvars[groups['kubeadm_masters'][0]]['certificate_key']['stdout'] }}"
+  certificateKey: "{{ hostvars[groups['module_k8s_master_nodes'][0]]['certificate_key']['stdout'] }}"
   localAPIEndpoint: 
     advertiseAddress: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     bindPort: 6443
