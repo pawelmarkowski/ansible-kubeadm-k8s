@@ -18,13 +18,13 @@ kubeadm_openstack_cloud_controller_manager: true
 kubeadm_os_max_shared_lb: 5
 kubeadm_os_floating_network_id: ""
 kubeadm_os_subnet_id: ""
-kubeadm_os_username: ""
-kubeadm_os_password: ""
-kubeadm_os_user_domain_name: ""
-kubeadm_os_auth_url: "https://cf2.cloudferro.com:5000/v3"
-kubeadm_os_project: ""
+username: ""
+password: ""
+domain_id: ""
+auth_url: "https://cf2.cloudferro.com:5000/v3"
+tenant_id: ""
 
-kubeadm_cri_type: docker
+kubeadm_cri_type: containerd
 kubeadm_cri_cgroup_driver: cgroupfs
 
 # Provision klaster with cilium
