@@ -11,7 +11,7 @@ discovery:
   timeout: 4m0s
 nodeRegistration:
 {% if kubeadm_cri_type == "containerd" %}
-  criSocket: /run/containerd/containerd.sock
+  criSocket: unix:///run/containerd/containerd.sock
 {% elif kubeadm_cri_type == "docker" %}
   criSocket: /var/run/dockershim.sock
 {% endif %}
