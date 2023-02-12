@@ -4,7 +4,7 @@ kind: InitConfiguration
 certificateKey: {{ certificate_key.stdout }}
 nodeRegistration:
 {% if kubeadm_cri_type == "containerd" %}
-  criSocket: unix:///run/containerd/containerd.sock
+  criSocket: /run/containerd/containerd.sock
 {% elif kubeadm_cri_type == "docker" %}
   criSocket: /var/run/dockershim.sock
 {% endif %}
