@@ -1,2 +1,2 @@
 # https://github.com/kubernetes/cloud-provider-openstack/blob/master/docs/openstack-cloud-controller-manager/using-openstack-cloud-controller-manager.md
-KUBELET_EXTRA_ARGS="{%- if kubeadm_openstack_cloud_controller_manager -%}--cloud-provider=external{%- endif -%} {%- if kubeadm_worker_kubelet_node_ip != "" -%}--node-ip {{ kubeadm_worker_kubelet_node_ip }}{%- endif -%}"
+KUBELET_EXTRA_ARGS="{%- if kubeadm_openstack_cloud_controller_manager -%}--cloud-provider=external{%- endif -%} {%- if kubeadm_worker_kubelet_node_ip != "" -%}--node-ip {{ kubeadm_worker_kubelet_node_ip }}{%- endif -%}--cgroup-driver {{ kubeadm_cri_cgroup_driver }}"

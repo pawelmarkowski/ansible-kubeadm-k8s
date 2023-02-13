@@ -25,7 +25,7 @@ auth_url: "https://cf2.cloudferro.com:5000/v3"
 tenant_id: ""
 
 kubeadm_cri_type: containerd
-kubeadm_cri_cgroup_driver: cgroupfs
+kubeadm_cri_cgroup_driver: systemd
 
 # Provision klaster with cilium
 kubeadm_install_cilium: false
