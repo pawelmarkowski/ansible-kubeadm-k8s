@@ -15,6 +15,10 @@
   apt_key:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     state: present
+  retries: 4
+  delay: 3
+  register: result
+  until: result["failed"] == false
   become: true
 
 # unfortunately there is no repo for focal [kubernetes-focal] dist (ubuntu 20.04)
