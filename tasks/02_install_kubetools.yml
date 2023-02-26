@@ -9,13 +9,17 @@
       - gpg-agent
     state: present
     update_cache: true
+  retries: 2
+  delay: 5
+  register: result
+  until: result["failed"] == false
   become: true
 
 - name: Add an Apt signing key for kubernetes
   apt_key:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     state: present
-  retries: 4
+  retries: 5
   delay: 3
   register: result
   until: result["failed"] == false
@@ -60,6 +64,10 @@
       - cri-tools
     state: present
     update_cache: true
+  retries: 2
+  delay: 5
+  register: result
+  until: result["failed"] == false
   become: true
 
 - name: Prevent kubetools from being upgraded
