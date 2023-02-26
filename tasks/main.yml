@@ -58,3 +58,8 @@
   when: >
     kubeadm_install_cilium | bool and
     inventory_hostname in groups['module_k8s_master_nodes']
+
+- import_tasks: 07_cinder_csi.yml
+  when: >
+    kubeadm_install_cinder_csi | bool and
+    inventory_hostname in groups['module_k8s_master_nodes']

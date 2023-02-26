@@ -1,8 +1,8 @@
 ---
-kubeadm_version_kubeadm: 1.25.*
-kubeadm_version_kubelet: 1.25.*
-kubeadm_version_kubectl: 1.25.*
-kubeadm_version_kubernetes: 1.25.*
+kubeadm_version_kubeadm: 1.24.*
+kubeadm_version_kubelet: 1.24.*
+kubeadm_version_kubectl: 1.24.*
+kubeadm_version_kubernetes: 1.24.*
 kubeadm_version_reinstall: false
 
 kubeadm_dns_domain: cluster
@@ -29,6 +29,7 @@ kubeadm_cri_cgroup_driver: systemd
 
 # Provision klaster with cilium
 kubeadm_install_cilium: false
+kubeadm_install_cinder_csi: false
 kubeadm_join_override: false
 
 # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/ --bind-address

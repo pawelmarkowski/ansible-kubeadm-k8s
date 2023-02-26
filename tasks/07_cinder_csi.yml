@@ -1,0 +1,21 @@
+---
+- block:
+    - name: clone Cinder CSI
+      ansible.builtin.git:
+        repo: https://github.com/kubernetes/cloud-provider-openstack.git
+        dest: /tmp/cloud-provider-openstack/
+        single_branch: yes
+        version: master
+    - name: Recursively remove files from repo that shoud not be applied
+      ansible.builtin.file:
+        path: /tmp/cloud-provider-openstack/charts/cinder-csi-plugin/{{ item }}
+        state: absent
+      with_items:
+        - templates/secret.yaml
+    - name: Install all objects from def files
+      k8s:
+        src: "/tmp/cloud-provider-openstack/charts/cinder-csi-plugin/"
+        state: present
+        apply: true
+  run_once: true
+  become: true
