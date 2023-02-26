@@ -19,8 +19,8 @@
   apt_key:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     state: present
-  retries: 5
-  delay: 3
+  retries: 10
+  delay: 4
   register: result
   until: result["failed"] == false
   become: true

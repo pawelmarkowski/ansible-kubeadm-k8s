@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: cf.kubeadm
+  role_name: kubeadm
   author: Paweł Markowski, Jan Sobczak
   description: Kubernetes installation
   company: Mtechnology.pl, Cloudferro
