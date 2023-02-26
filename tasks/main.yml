@@ -1,9 +1,16 @@
 ---
 - import_tasks: 01_prepare.yml
+  when: >
+    inventory_hostname in groups['module_k8s_master_nodes'] or
+    inventory_hostname in groups['module_k8s_worker_nodes']
 - import_tasks: 02_install_kubetools.yml
+when: >
+  inventory_hostname in groups['module_k8s_master_nodes'] or
+  inventory_hostname in groups['module_k8s_worker_nodes']
 
 - import_tasks: 03_provision_kubeadm.yml
-  when: inventory_hostname == groups['module_k8s_master_nodes'][0]
+  run_once: true
+  delegate_to: "{{ groups['module_k8s_master_nodes'][0] }}"
 
 # TODO: check if node needs to be added and then generate new cert + token
 
@@ -61,5 +68,7 @@
 
 - import_tasks: 07_cinder_csi.yml
   when: >
-    kubeadm_install_cinder_csi | bool and
-    inventory_hostname in groups['module_k8s_master_nodes']
+    kubeadm_install_cinder_csi | bool
+  run_once: true
+  delegate_to: "{{ groups['module_k8s_master_nodes'][0] }}"
+  
