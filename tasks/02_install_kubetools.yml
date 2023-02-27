@@ -36,6 +36,7 @@
     id: B53DC80D13EDEF05
     file: /tmp/apt-key.gpg
     state: present
+  become: true
 
 # unfortunately there is no repo for focal [kubernetes-focal] dist (ubuntu 20.04)
 # repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-{{ ansible_facts['lsb']['codename'] }} main
