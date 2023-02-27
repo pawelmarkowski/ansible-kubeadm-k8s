@@ -15,16 +15,27 @@
   until: result["failed"] == false
   become: true
 
-- name: Add an Apt signing key for kubernetes
+# - name: Add an Apt signing key for kubernetes
+#   apt_key:
+#     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+#     state: present
+#   retries: 10
+#   delay: 4
+#   register: result
+#   until: result["failed"] == false
+#   become: true
+- name: Upload apt-key gpg for kubernetes
+  copy:
+    src: apt-key.gpg
+    dest: /tmp/apt-key.gpg
+    mode: "0640"
+  # become: true
+
+- name: Add Apt signing key for kubernetes on remote server to keyring
   apt_key:
-    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    id: B53DC80D13EDEF05
+    file: /tmp/apt-key.gpg
     state: present
-  retries: 10
-  delay: 4
-  register: result
-  until: result["failed"] == false
-  become: true
-  ignore_errors: yes
 
 # unfortunately there is no repo for focal [kubernetes-focal] dist (ubuntu 20.04)
 # repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-{{ ansible_facts['lsb']['codename'] }} main
