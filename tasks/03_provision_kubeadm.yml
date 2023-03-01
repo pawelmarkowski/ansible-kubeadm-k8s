@@ -28,10 +28,8 @@
       become: true
       register: _kubeadm_init_config
 
-    - debug: var=inventory_hostname
-    - debug: var=hostvars[inventory_hostname]
-    - debug: var=hostvars[inventory_hostname]['ansible_default_ipv6']['address']
-
+    - debug: var=groupvars
+    - debug: var=hostvars[inventory_hostname]['groups']['module_k8s_master_nodes_0'].0
     - name: Execute kubeadm init
       command: >
         kubeadm init --config /etc/kubernetes/custom_configs/kubeadm_init.conf
