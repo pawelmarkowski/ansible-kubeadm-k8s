@@ -13,7 +13,7 @@ nodeRegistration:
 skipPhases:
   - addon/kube-proxy
 localAPIEndpoint:
-  advertiseAddress: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+  advertiseAddress: "{{ hostvars[inventory_hostname]['groups']['module_k8s_master_nodes_0'].0 }}"
   bindPort: 6443
 ---
 apiVersion: kubeadm.k8s.io/v1beta3

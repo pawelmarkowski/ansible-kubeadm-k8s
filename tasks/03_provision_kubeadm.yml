@@ -28,8 +28,6 @@
       become: true
       register: _kubeadm_init_config
 
-    - debug: var=groupvars
-    - debug: var=hostvars[inventory_hostname]['groups']['module_k8s_master_nodes_0'].0
     - name: Execute kubeadm init
       command: >
         kubeadm init --config /etc/kubernetes/custom_configs/kubeadm_init.conf
