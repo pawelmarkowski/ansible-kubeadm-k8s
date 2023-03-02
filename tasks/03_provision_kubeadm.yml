@@ -67,6 +67,25 @@
             - cloud-controller-manager-role-bindings.yaml
             - openstack-cloud-controller-manager-ds.yaml
           become: true
+        - block:
+            - name: clone Cinder CSI
+              ansible.builtin.git:
+                repo: https://github.com/kubernetes/cloud-provider-openstack.git
+                dest: /tmp/cloud-provider-openstack/
+                single_branch: yes
+                version: master
+            - name: Recursively remove files from repo that shoud not be applied
+              ansible.builtin.file:
+                path: /tmp/cloud-provider-openstack/manifests/cinder-csi-plugin/{{ item }}
+                state: absent
+              with_items:
+                - csi-secret-cinderplugin.yaml
+            - name: Install all objects from def files
+              command: |
+                kubectl apply -f /tmp/cloud-provider-openstack/manifests/cinder-csi-plugin/
+              become: true
+          # end block
+
       # end block
       when: kubeadm_openstack_cloud_controller_manager | bool
 
