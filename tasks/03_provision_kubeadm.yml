@@ -82,7 +82,7 @@
                 - csi-secret-cinderplugin.yaml
             - name: Install all objects from def files
               command: |
-                kubectl apply -f /tmp/cloud-provider-openstack/manifests/cinder-csi-plugin/
+                kubectl apply --kubeconfig=/etc/kubernetes/admin.conf -f /tmp/cloud-provider-openstack/manifests/cinder-csi-plugin/
               become: true
           # end block
 
