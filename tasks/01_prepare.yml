@@ -1,4 +1,8 @@
 ---
+- name: Show available groups
+  debug:
+    var: group_names
+
 - name: Ensure module br_netfilter autostart
   copy:
     src: modules-load.d/k8s.conf

@@ -5,7 +5,7 @@ domain-id = {{ domain_id }}
 auth-url = {{ auth_url }}
 tenant-id = {{ tenant_id }}
 region = {{ kubeadm_region }}
-router-id = {{ kubeadm_router_id }}
+__router-id = {{ kubeadm_router_id }}
 
 [LoadBalancer]
 use-octavia=true
@@ -13,6 +13,11 @@ subnet-id={{ kubeadm_os_subnet_id }}
 floating-network-id={{ kubeadm_os_floating_network_id }}
 max-shared-lb={{ kubeadm_os_max_shared_lb }}
 lb-provider=octavia
+create-monitor=yes
+monitor-delay=1m
+monitor-timeout=30s
+monitor-max-retries=3
+enable-ingress-hostname=true
 
 [BlockStorage]
 bs-version=v2
