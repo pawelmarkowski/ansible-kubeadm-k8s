@@ -1,0 +1,7 @@
+- name: Fetch kubeconfig admin file
+  ansible.builtin.fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: ~/.kube/config-{{ kubeadm_cluster_name }}
+    flat: yes
+  register: kubeconf_file
+  become: true
