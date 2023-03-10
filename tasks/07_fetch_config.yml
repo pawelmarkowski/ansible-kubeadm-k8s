@@ -1,0 +1,5 @@
+- name: Fetch kubeconfig admin file
+  ansible.builtin.fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: /tmp/k8sconfig
+    flat: yes
