@@ -1,6 +1,6 @@
 - name: Fetch kubeconfig admin file
   ansible.builtin.fetch:
     src: /etc/kubernetes/admin.conf
-    dest: /tmp/k8sconfig
+    dest: ~/.kube/config-{{ inventory_hostname }}
     flat: yes
   become: true
