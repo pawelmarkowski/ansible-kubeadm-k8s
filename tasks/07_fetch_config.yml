@@ -1,15 +1,7 @@
 - name: Fetch kubeconfig admin file
   ansible.builtin.fetch:
     src: /etc/kubernetes/admin.conf
-    dest: ~/.kube/config-{{ inventory_hostname }}
+    dest: ~/.kube/config-{{ kubeadm_cluster_name }}
     flat: yes
   register: kubeconf_file
   become: true
-
-- name: debug
-  debug:
-    var: kubeconf_file
-
-- name: debug2
-  debug:
-    var: kubeconf_file.dest
