@@ -3,4 +3,13 @@
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/config-{{ inventory_hostname }}
     flat: yes
+  register: kubeconf_file
   become: true
+
+- name: debug
+  debug:
+    var: kubeconf_file
+
+- name: debug2
+  debug:
+    var: kubeconf_file.dest
