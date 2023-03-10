@@ -1,12 +1,11 @@
 ---
-- import_tasks: 01_prepare.yml
-  when: >
-    inventory_hostname in groups['module_k8s_master_nodes'] or
-    inventory_hostname in groups['module_k8s_worker_nodes']
-- import_tasks: 02_install_kubetools.yml
-  when: >
-    inventory_hostname in groups['module_k8s_master_nodes'] or
-    inventory_hostname in groups['module_k8s_worker_nodes']
+- hosts: module_k8s_master_nodes:module_k8s_worker_nodes:module_k8s_fip_jumphost
+  tasks:
+    - import_tasks: 01_prepare.yml
+
+- hosts: module_k8s_master_nodes:module_k8s_worker_nodes
+  tasks:
+    - import_tasks: 02_install_kubetools.yml
 
 - import_tasks: 03_provision_kubeadm.yml
   run_once: true
@@ -14,54 +13,54 @@
 
 # TODO: check if node needs to be added and then generate new cert + token
 
-- block:
-    - name: Generate random certificate key
-      shell: kubeadm init phase upload-certs --upload-certs | tail -n 1
-      register: certificate_key
+- hosts: module_k8s_master_nodes_0
+  tasks:
+    - block:
+        - name: Generate random certificate key
+          shell: kubeadm init phase upload-certs --upload-certs | tail -n 1
+          register: certificate_key
+          become: true
+
+        - name: Create auth token
+          command: kubeadm token create
+          register: token
+          become: true
+
+        - name: Calculate discovery token ca cert hash
+          shell: >
+            openssl x509 -in /etc/kubernetes/pki/ca.crt -pubkey -noout |
+            openssl pkey -pubin -outform DER |
+            openssl dgst -sha256 | awk '{print $2}'
+          register: discovery_token_ca_cert_hash
+          become: true
+
+        # Register do not work when using delegate_facts
+        - name: Set facts
+          set_fact:
+            certificate_key: "{{ certificate_key }}"
+            token: "{{ token }}"
+            discovery_token_ca_cert_hash: "{{ discovery_token_ca_cert_hash }}"
+
+      # end block
+      # By default facts are assing to current host
+      delegate_facts: true
+
+- hosts: module_k8s_master_nodes:module_k8s_worker_nodes:!module_k8s_master_nodes_0
+  tasks:
+    - import_tasks: 04_join_claster.yml
+
+- hosts: module_k8s_master_nodes_0
+  tasks:
+    - name: Delete auth token # noqa no-changed-when
+      command: "kubeadm token delete {{ token.stdout }}"
       become: true
 
-    - name: Create auth token
-      command: kubeadm token create
-      register: token
-      become: true
+- hosts: module_k8s_master_nodes
+  tasks:
+    - import_tasks: 05_copy_kube_config.yml
 
-    - name: Calculate discovery token ca cert hash
-      shell: >
-        openssl x509 -in /etc/kubernetes/pki/ca.crt -pubkey -noout |
-        openssl pkey -pubin -outform DER |
-        openssl dgst -sha256 | awk '{print $2}'
-      register: discovery_token_ca_cert_hash
-      become: true
-
-    # Register do not work when using delegate_facts
-    - name: Set facts
-      set_fact:
-        certificate_key: "{{ certificate_key }}"
-        token: "{{ token }}"
-        discovery_token_ca_cert_hash: "{{ discovery_token_ca_cert_hash }}"
-
-  # end block
-  run_once: true
-  delegate_to: "{{ groups['module_k8s_master_nodes'][0] }}"
-  # By default facts are assing to current host
-  delegate_facts: true
-
-- import_tasks: 04_join_claster.yml
-  when: >
-    (inventory_hostname in groups['module_k8s_master_nodes'] or
-    inventory_hostname in groups['module_k8s_worker_nodes']) and
-    inventory_hostname != groups['module_k8s_master_nodes'][0]
-
-- name: Delete auth token # noqa no-changed-when
-  command: "kubeadm token delete {{ token.stdout }}"
-  become: true
-  run_once: true
-  delegate_to: "{{ groups['module_k8s_master_nodes'][0] }}"
-
-- import_tasks: 05_copy_kube_config.yml
-  when: inventory_hostname in groups['module_k8s_master_nodes']
-
-- import_tasks: 06_cilium.yml
-  when: >
-    kubeadm_install_cilium | bool and
-    inventory_hostname in groups['module_k8s_master_nodes']
+- hosts: module_k8s_master_nodes
+  tasks:
+    - import_tasks: 06_cilium.yml
+      when: >
+        kubeadm_install_cilium | bool
