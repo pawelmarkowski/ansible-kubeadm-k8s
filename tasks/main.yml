@@ -1,5 +1,5 @@
 ---
-- hosts: module_k8s_master_nodes:module_k8s_worker_nodes:module_k8s_fip_jumphost
+- hosts: type_openstack_compute_instance_v2
   tasks:
     - import_tasks: 01_prepare.yml
 
